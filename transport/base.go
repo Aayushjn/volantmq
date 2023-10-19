@@ -9,6 +9,7 @@ import (
 	"github.com/VolantMQ/volantmq/auth"
 	"github.com/VolantMQ/volantmq/metrics"
 	"github.com/VolantMQ/volantmq/types"
+	"github.com/quic-go/quic-go"
 )
 
 // Config is base configuration object used by all transports
@@ -102,4 +103,20 @@ func (c *baseConfig) handleConnection(conn Conn) {
 	// conn.Conn.SetReadDeadline(time.Now().Add(time.Second * time.Duration(c.ConnectTimeout))) // nolint: errcheck, gas
 
 	err = c.OnConnection(conn, c.config.AuthManager)
+}
+
+func (c *baseConfig) handleQuicConnection(stream quic.Stream) {
+	if c == nil {
+		c.log.Error("Invalid connection type")
+		return
+	}
+
+	var err error
+
+	defer func() {
+		if err != nil {
+			_ = stream.Close()
+		}
+	}()
+	err = c.OnQuicConnection(stream, c.config.AuthManager)
 }

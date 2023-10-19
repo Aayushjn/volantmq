@@ -10,11 +10,11 @@ require (
 	github.com/gobwas/ws v1.0.2
 	github.com/mitchellh/mapstructure v1.2.2
 	github.com/pkg/errors v0.9.1
-	github.com/stretchr/testify v1.4.0
+	github.com/quic-go/quic-go v0.39.1
+	github.com/stretchr/testify v1.6.1
 	github.com/troian/healthcheck v0.1.3
 	github.com/vbauerster/mpb/v4 v4.9.4
 	gitlab.com/VolantMQ/vlplugin/persistence/mem v0.0.7
 	go.uber.org/zap v1.16.0
-	golang.org/x/crypto v0.0.0-20190927123631-a832865fa7ad // indirect
-	gopkg.in/yaml.v3 v3.0.0-20200121175148-a6ecf24a6d71
+	gopkg.in/yaml.v3 v3.0.1
 )

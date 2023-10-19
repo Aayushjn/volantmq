@@ -12,8 +12,8 @@ VolantMQ
 
 VolantMQ is a high performance MQTT broker that aims to be fully compliant with MQTT specs
 
-##Features
-###MQTT Specs
+## Features
+### MQTT Specs
 - [MQTT v3.1 - V3.1.1](http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/os/mqtt-v3.1.1-os.html) full support
 - [MQTT V5.0](http://docs.oasis-open.org/mqtt/mqtt/v5.0/mqtt-v5.0.html) limited support. see details below
   - [x] Properties

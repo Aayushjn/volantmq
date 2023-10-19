@@ -127,43 +127,57 @@ func loadMqttListeners(defaultAuth *auth.Manager, lCfg *configuration.ListenersC
 			}
 
 			switch name {
-			case "ssl":
+			// case "ssl":
+			// 	if cfg.TLS == nil {
+			// 		return nil, errors.New("listeners.mqtt.ssl: must provide TLS config")
+			// 	}
+			// 	logger.Warnf("listeners.mqtt.ssl is deprecated. Now TLS config can be provided in tcp section")
+			// 	fallthrough
+			// case "tcp":
+			// 	tcpConfig := transport.NewConfigTCP(tCfg)
+
+			// 	if cfg.TLS != nil {
+			// 		tlsConfig, err := cfg.TLS.LoadConfig()
+			// 		if err != nil {
+			// 			return nil, fmt.Errorf("listeners.mqtt.ssl: %w", err)
+			// 		}
+			// 		tcpConfig.TLS = tlsConfig
+			// 	}
+
+			// 	listeners = append(listeners, tcpConfig)
+			// case "wss":
+			// 	if cfg.TLS == nil {
+			// 		return nil, errors.New("listeners.mqtt.wss: must provide TLS config")
+			// 	}
+			// 	logger.Warnf("listeners.mqtt.wss is deprecated. Now TLS config can be provided in ws section")
+			// 	fallthrough
+			// case "ws":
+			// 	configWs := transport.NewConfigWS(tCfg)
+			// 	configWs.Path = cfg.Path
+
+			// 	if cfg.TLS != nil {
+			// 		if _, err := cfg.TLS.Validate(); err != nil {
+			// 			return nil, errors.Wrap(err, "listeners.mqtt.wss")
+			// 		}
+			// 		configWs.CertFile = cfg.TLS.Cert
+			// 		configWs.KeyFile = cfg.TLS.Key
+			// 	}
+
+			// 	listeners = append(listeners, configWs)
+			case "quic":
+				quicConfig := transport.NewConfigQUIC(tCfg)
 				if cfg.TLS == nil {
-					return nil, errors.New("listeners.mqtt.ssl: must provide TLS config")
+					return nil, errors.New("listeners.mqtt.quic: must provide TLS config")
 				}
-				logger.Warnf("listeners.mqtt.ssl is deprecated. Now TLS config can be provided in tcp section")
-				fallthrough
-			case "tcp":
-				tcpConfig := transport.NewConfigTCP(tCfg)
-
-				if cfg.TLS != nil {
-					tlsConfig, err := cfg.TLS.LoadConfig()
-					if err != nil {
-						return nil, fmt.Errorf("listeners.mqtt.ssl: %w", err)
-					}
-					tcpConfig.TLS = tlsConfig
+				if _, err := cfg.TLS.Validate(); err != nil {
+					return nil, errors.Wrap(err, "listeners.mqtt.quic")
 				}
-
-				listeners = append(listeners, tcpConfig)
-			case "wss":
-				if cfg.TLS == nil {
-					return nil, errors.New("listeners.mqtt.wss: must provide TLS config")
+				tlsConfig, err := cfg.TLS.LoadConfig()
+				if err != nil {
+					return nil, fmt.Errorf("listeners.mqtt.quic: %w", err)
 				}
-				logger.Warnf("listeners.mqtt.wss is deprecated. Now TLS config can be provided in ws section")
-				fallthrough
-			case "ws":
-				configWs := transport.NewConfigWS(tCfg)
-				configWs.Path = cfg.Path
-
-				if cfg.TLS != nil {
-					if _, err := cfg.TLS.Validate(); err != nil {
-						return nil, errors.Wrap(err, "listeners.mqtt.wss")
-					}
-					configWs.CertFile = cfg.TLS.Cert
-					configWs.KeyFile = cfg.TLS.Key
-				}
-
-				listeners = append(listeners, configWs)
+				quicConfig.TLS = tlsConfig
+				listeners = append(listeners, quicConfig)
 			default:
 				return nil, errors.Errorf("unknown mqtt listener type %s", name)
 			}

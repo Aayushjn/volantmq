@@ -180,10 +180,12 @@ func (s *server) ListenAndServe(config interface{}) error {
 	}
 
 	switch c := config.(type) {
-	case *transport.ConfigTCP:
-		l, err = transport.NewTCP(c, &internalConfig)
-	case *transport.ConfigWS:
-		l, err = transport.NewWS(c, &internalConfig)
+	// case *transport.ConfigTCP:
+	// 	l, err = transport.NewTCP(c, &internalConfig)
+	// case *transport.ConfigWS:
+	// 	l, err = transport.NewWS(c, &internalConfig)
+	case *transport.ConfigQUIC:
+		l, err = transport.NewQUIC(c, &internalConfig)
 	default:
 		return ErrInvalidListenerType
 	}

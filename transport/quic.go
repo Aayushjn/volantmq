@@ -66,7 +66,7 @@ func NewQUIC(config *ConfigQUIC, internal *InternalConfig) (Provider, error) {
 		if err != nil {
 			panic(err)
 		}
-		l.handleQuicConnection(stream)
+		l.handleConnection(stream)
 	}
 
 	return l, nil

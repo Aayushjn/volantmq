@@ -75,7 +75,7 @@ func (c *baseConfig) baseReady() error {
 }
 
 // handleConnection is for the broker to handle an incoming connection from a client
-func (c *baseConfig) handleConnection(conn Conn) {
+func (c *baseConfig) handleConnection(stream quic.Stream) {
 	if c == nil {
 		c.log.Error("Invalid connection type")
 		return
@@ -85,7 +85,7 @@ func (c *baseConfig) handleConnection(conn Conn) {
 
 	defer func() {
 		if err != nil {
-			_ = conn.Close()
+			_ = stream.Close()
 		}
 	}()
 	// To establish a connection, we must
@@ -102,21 +102,5 @@ func (c *baseConfig) handleConnection(conn Conn) {
 	// to client. Exit regardless of error type.
 	// conn.Conn.SetReadDeadline(time.Now().Add(time.Second * time.Duration(c.ConnectTimeout))) // nolint: errcheck, gas
 
-	err = c.OnConnection(conn, c.config.AuthManager)
-}
-
-func (c *baseConfig) handleQuicConnection(stream quic.Stream) {
-	if c == nil {
-		c.log.Error("Invalid connection type")
-		return
-	}
-
-	var err error
-
-	defer func() {
-		if err != nil {
-			_ = stream.Close()
-		}
-	}()
-	err = c.OnQuicConnection(stream, c.config.AuthManager)
+	err = c.OnConnection(stream, c.config.AuthManager)
 }

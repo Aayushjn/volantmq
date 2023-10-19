@@ -87,10 +87,14 @@ mqtt:
 listeners:
   defaultAddr: "0.0.0.0" # default 127.0.0.1
   mqtt:
-    tcp:
+    # tcp:
+    #   1883:
+    #     auth:
+    #     tls:
+    # ws:
+    #   8883:
+    quic:
       1883:
         auth:
         tls:
-    ws:
-      8883:
 

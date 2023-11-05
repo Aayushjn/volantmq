@@ -48,7 +48,9 @@ mqtt:
 listeners:
   defaultAddr: ""
   mqtt:
-    tcp:
+    quic:
       1883:
-        def: ""
+        tls:
+          cert: '/home/aayush/volantmq/cmd/volantmq/cert.pem'
+          key: '/home/aayush/volantmq/cmd/volantmq/key.pem'
 `)

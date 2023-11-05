@@ -90,7 +90,7 @@ func (s *session) stop(reason mqttp.ReasonCode) {
 // SignalPublish process PUBLISH packet from client
 func (s *session) SignalPublish(pkt *mqttp.Publish) error {
 	pkt.SetPublishID(s.subscriber.Hash())
-
+	s.log.Debug(pkt.Topic(), pkt.Version(), string(pkt.Payload()))
 	// [MQTT-3.3.1.3]
 	if pkt.Retain() {
 		if err := s.messenger.Retain(pkt); err != nil {
@@ -207,6 +207,7 @@ func (s *session) SignalUnSubscribe(pkt *mqttp.UnSubscribe) (mqttp.IFace, error)
 	var retCodes []mqttp.ReasonCode
 
 	_ = pkt.ForEachTopic(func(t *mqttp.Topic) error {
+		s.log.Info(t.Full())
 		reason := mqttp.CodeSuccess
 		if e := s.permissions.ACL(s.id, s.username, t.Full(), vlauth.AccessRead); errors.Is(e, vlauth.StatusAllow) {
 			if e = s.subscriber.UnSubscribe(t.Full()); e != nil {

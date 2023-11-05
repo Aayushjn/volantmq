@@ -66,6 +66,7 @@ func NewQUIC(config *ConfigQUIC, internal *InternalConfig) (Provider, error) {
 		if err != nil {
 			panic(err)
 		}
+		fmt.Println("Accepted QUIC stream")
 		l.handleConnection(stream)
 	}
 
